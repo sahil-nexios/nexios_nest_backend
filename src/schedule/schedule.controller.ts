@@ -6,10 +6,7 @@ import { ContactDto } from '../schedule/dtos/contact.dto';
 import { Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { fileUploadOptions } from '../multerService';
-import { Multer } from 'multer';
-import { diskStorage } from 'multer'
-import { extname } from 'path'
-import { validateOrReject } from 'class-validator';
+
 
 
 @Controller('user')
@@ -18,7 +15,7 @@ export class ScheduleController {
         private readonly scheduleservice: ScheduleService,
     ) { }
 
-    @Post('schedule')
+    @Post('add_schedule')
     @UsePipes(new ValidationPipe())
     create(@Body() dto: CreateScheduleDto, @Res() res: Response) {
         try {

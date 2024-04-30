@@ -7,6 +7,8 @@ import { error } from 'console';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const PORT = process.env.PORT || 8000
+  app.enableCors();
   const expressApp = express();
   dotenv.config();
   expressApp.use('/uploads', express.static('uploads'));
@@ -30,6 +32,8 @@ async function bootstrap() {
       stopAtFirstError: true,
     }),
   );
-  await app.listen(process.env.PORT);
+  await app.listen(PORT,()=>{
+    console.log(`server is running on port ${PORT}`)
+  });
 }
 bootstrap();
