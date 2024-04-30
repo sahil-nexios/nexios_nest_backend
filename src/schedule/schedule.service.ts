@@ -58,7 +58,6 @@ export class ScheduleService {
         return await this.applyNowRepository.save(schedule)
     }
 
-
     async createcontactus(dto) {
         const contactus = this.contactRepository.create(dto)
 
@@ -77,6 +76,18 @@ export class ScheduleService {
 
     async our_client() {
         return await this.connection.query('SELECT * FROM client');
+    }
+
+    async our_team(){
+        return await this.connection.query('SELECT * FROM team');
+    }
+
+    async portfolio(){
+        return await this.connection.query('SELECT * FROM portfolio_service');
+    }
+
+    async open_position(){
+        return await this.connection.query('SELECT * FROM open_position');
     }
 }
 

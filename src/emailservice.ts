@@ -3,40 +3,31 @@ import * as nodemailer from 'nodemailer';
 import * as fs from 'fs';
 import * as handlebars from 'handlebars';
 
-let transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
-    auth: {
-        user: 'sahil.nexios@gmail.com',
-        pass: 'agit yxim xtye jiya',
-    },
-});
 @Injectable()
-export class EmailService {
 
+export class EmailService {
     async schedule(sendData: any): Promise<any> {
         try {
             const file_template = sendData.file_template;
             const subject = sendData.subject;
 
-            // const transporter = nodemailer.createTransport({
-            //     host: 'smtp.gmail.com',
-            //     port: 465,
-            //     secure: true,
-            //     auth: {
-            //         user: 'sahil.nexios@gmail.com',
-            //         pass: 'agit yxim xtye jiya',
-            //     },
-            // });
+            const transporter = nodemailer.createTransport({
+                host: 'smtp.gmail.com',
+                port: 465,
+                secure: true,
+                auth: {
+                    user: process.env.YOUR_EMAIL,
+                    pass: process.env.YOUR_APP_PASSWORD,
+                },
+            });
 
             const html = fs.readFileSync(file_template, { encoding: 'utf-8' });
             const template = handlebars.compile(html);
             const htmlToSend = template(sendData);
 
             const mailOptions = {
-                from: 'sahil.nexios@gmail.com',
-                to: 'sahil.nexios@gmail.com',
+                from: process.env.YOUR_EMAIL,
+                to: process.env.To_EMAIL,
                 subject: subject,
                 html: htmlToSend,
             };
@@ -58,10 +49,18 @@ export class EmailService {
             let htmlToSend = template(sendData);
 
             let resumeFile = fs.readFileSync(sendData.pdfpath);
-
+            const transporter = nodemailer.createTransport({
+                host: 'smtp.gmail.com',
+                port: 465,
+                secure: true,
+                auth: {
+                    user: process.env.YOUR_EMAIL,
+                    pass: process.env.YOUR_APP_PASSWORD,
+                },
+            });
             let mailOptions = {
-                from: 'sahil.nexios@gmail.com',
-                to: 'sahil.nexios@gmail.com',
+                from: process.env.YOUR_EMAIL,
+                to: process.env.To_EMAIL,
                 subject: 'Job Application',
                 html: htmlToSend,
                 attachments: [
@@ -86,14 +85,23 @@ export class EmailService {
             const file_template = sendData.file_template;
             const subject = sendData.subject;
 
+            const transporter = nodemailer.createTransport({
+                host: 'smtp.gmail.com',
+                port: 465,
+                secure: true,
+                auth: {
+                    user: process.env.YOUR_EMAIL,
+                    pass: process.env.YOUR_APP_PASSWORD,
+                },
+            });
 
             const html = fs.readFileSync(file_template, { encoding: 'utf-8' });
             const template = handlebars.compile(html);
             const htmlToSend = template(sendData);
 
             const mailOptions = {
-                from: 'sahil.nexios@gmail.com',
-                to: 'sahil.nexios@gmail.com',
+                from: process.env.YOUR_EMAIL,
+                to: process.env.To_EMAIL,
                 subject: subject,
                 html: htmlToSend,
             };
@@ -107,5 +115,5 @@ export class EmailService {
             return { status: false, data: [], message: 'Unable to send email!' };
         }
     }
-    
+
 }
