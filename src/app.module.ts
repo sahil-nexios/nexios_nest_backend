@@ -8,6 +8,8 @@ import { applynow } from './schedule/schedule.entity/applynow.entity'
 import { contact } from './schedule/schedule.entity/contact.entity'
 import { MulterModule } from '@nestjs/platform-express';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { dataSourceOptions } from '../db/data-source'
+
 
 @Module({
   imports: [
@@ -16,16 +18,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       isGlobal: true,
       // ignoreEnvFile : true
     }),
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: process.env.DB_HOST,
-      port: 3306,
-      username: process.env.DB_USERNAME,
-      password: process.env.DB_PASSWORD,
-      database: 'nexios_nest',
-      entities: [contact, ScheduleEntity, applynow],
-      synchronize: false,
-    }),
+    TypeOrmModule.forRoot(
+      dataSourceOptions
+    ),
     ScheduleModule],
   controllers: [AppController],
   providers: [AppService],

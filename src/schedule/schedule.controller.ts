@@ -17,9 +17,9 @@ export class ScheduleController {
 
     @Post('add_schedule')
     @UsePipes(new ValidationPipe())
-    create(@Body() dto: CreateScheduleDto, @Res() res: Response) {
+    async create(@Body() dto: CreateScheduleDto, @Res() res: Response) {
         try {
-            this.scheduleservice.create(dto)
+            await this.scheduleservice.create(dto)
             return res.status(HttpStatus.OK).json({ statusCode: HttpStatus.OK, status: true, message: 'Your Request Sent Succesfully !' });
 
         } catch (error) {
@@ -32,7 +32,7 @@ export class ScheduleController {
     @UseInterceptors(FileInterceptor('file', fileUploadOptions))
     async createApplynow(@UploadedFile() file, @Body() dto: ApplynowDto, @Res() res: Response) {
         try {
-            this.scheduleservice.createapplynow(dto, file)
+            await this.scheduleservice.createapplynow(dto, file)
             return res.status(HttpStatus.OK).json({ statusCode: HttpStatus.OK, status: true, message: 'Your Request Sent Succesfully !' });
 
         } catch (error) {
@@ -44,7 +44,7 @@ export class ScheduleController {
     @Post('contact_us')
     async contact_us(@Body() dto: ContactDto, @Res() res: Response) {
         try {
-            this.scheduleservice.createcontactus(dto)
+            await this.scheduleservice.createcontactus(dto)
             return res.status(HttpStatus.OK).json({ statusCode: HttpStatus.OK, status: true, message: 'Your Request Sent Succesfully !' });
         } catch (error) {
             console.log("🚀 ~ ScheduleController ~ contact_us ~ error:", error)
