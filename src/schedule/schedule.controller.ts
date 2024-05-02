@@ -1,11 +1,15 @@
-import { Body, Controller, HttpException, Post, Get, UsePipes, UploadedFile, ValidationPipe, Res, HttpStatus, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, HttpException, Param, Post, Get, UsePipes, UploadedFile, ValidationPipe, Res, HttpStatus, UseInterceptors } from '@nestjs/common';
 import { ScheduleService } from './schedule.service';
 import { CreateScheduleDto } from '../schedule/dtos/schedule.dto'
 import { ApplynowDto } from '../schedule/dtos/applynow.dto'
 import { ContactDto } from '../schedule/dtos/contact.dto';
+import { ClientDto } from '../schedule/dtos/client.dto';
+import { TeamDto } from '../schedule/dtos/team.dto';
 import { Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { fileUploadOptions } from '../multerService';
+import { clientimageupload } from '../multerService';
+import { teamimageupload } from '../multerService';
 
 
 
@@ -52,6 +56,21 @@ export class ScheduleController {
         }
     }
 
+
+    @Post('Add_client')
+    @UseInterceptors(FileInterceptor('image', clientimageupload))
+    async Add_client(@UploadedFile() file, @Body() dto: ClientDto, @Res() res: Response) {
+        try {
+            if (!file) return res.status(HttpStatus.OK).send({ statusCode: HttpStatus.BAD_REQUEST, status: false, message: "Please Upload Image !", });
+            await this.scheduleservice.Add_client(dto, file)
+            return res.status(HttpStatus.OK).json({ statusCode: HttpStatus.OK, status: true, message: 'Client Added Succesfully !' });
+        } catch (error) {
+            console.log("🚀 ~ ScheduleController ~ Add_client ~ error:", error)
+            return res.status(HttpStatus.OK).send({ statusCode: HttpStatus.INTERNAL_SERVER_ERROR, status: false, message: "Something Went Wrong !", });
+        }
+
+    }
+
     @Get('our_client')
     async our_client(@Res() res: Response) {
         try {
@@ -61,6 +80,78 @@ export class ScheduleController {
         } catch (error) {
             console.log("🚀 ~ ScheduleController ~ our_client ~ error:", error);
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({ statusCode: HttpStatus.INTERNAL_SERVER_ERROR, status: false, message: "Something Went Wrong !" });
+        }
+    }
+
+    @Post("update_client/:id")
+    @UseInterceptors(FileInterceptor('image', clientimageupload))
+    async Update_client(@Res() res: Response, @Param('id') id: string, @Body() dto: any, @UploadedFile() file?) {
+        try {
+            const finddata = await this.scheduleservice.Update_client(id, dto, file);
+            if (finddata == null) return res.status(HttpStatus.OK).send({ statusCode: HttpStatus.NOT_FOUND, status: false, message: "Client Not Found !", });
+
+            return res.status(HttpStatus.OK).json({ statusCode: HttpStatus.OK, status: true, message: 'Client Updated Succesfully !' });
+
+        } catch (error) {
+            console.log("🚀 ~ ScheduleController ~ Update_client ~ error:", error)
+            return res.status(HttpStatus.OK).send({ statusCode: HttpStatus.INTERNAL_SERVER_ERROR, status: false, message: "Something Went Wrong !", });
+        }
+
+    }
+
+    @Get("delete_client/:id")
+    async delete_client(@Res() res: Response, @Param('id') id: string) {
+        try {
+            const finddata = await this.scheduleservice.delete_client(id);
+            if (finddata == null) return res.status(HttpStatus.OK).send({ statusCode: HttpStatus.NOT_FOUND, status: false, message: "Client Not Found !", });
+            return res.status(HttpStatus.OK).json({ statusCode: HttpStatus.OK, status: true, message: 'Client Deleted Succesfully !' });
+
+        } catch (error) {
+            console.log("🚀 ~ ScheduleController ~ async ~ error:", error)
+            return res.status(HttpStatus.OK).send({ statusCode: HttpStatus.INTERNAL_SERVER_ERROR, status: false, message: "Something Went Wrong !", });
+        }
+    }
+
+    @Post('Add_team')
+    @UseInterceptors(FileInterceptor('image', teamimageupload))
+    async Add_team(@UploadedFile() file, @Body() dto: TeamDto, @Res() res: Response) {
+        try {
+            if (!file) return res.status(HttpStatus.OK).send({ statusCode: HttpStatus.BAD_REQUEST, status: false, message: "Please Upload Image !", });
+            await this.scheduleservice.Add_team(dto, file);
+            return res.status(HttpStatus.OK).json({ statusCode: HttpStatus.OK, status: true, message: 'Team Added Succesfully !' });
+
+        } catch (error) {
+            console.log("🚀 ~ ScheduleController ~ Add_team ~ error:", error)
+            return res.status(HttpStatus.OK).send({ statusCode: HttpStatus.INTERNAL_SERVER_ERROR, status: false, message: "Something Went Wrong !", });
+        }
+    }
+
+    @Post("update_team/:id")
+    @UseInterceptors(FileInterceptor('image', teamimageupload))
+    async Team_update(@Res() res: Response, @Param('id') id: string, @Body() dto: any, @UploadedFile() file?) {
+        try {
+            const finddata = await this.scheduleservice.Team_update(id, dto, file);
+            if (finddata == null) return res.status(HttpStatus.OK).send({ statusCode: HttpStatus.NOT_FOUND, status: false, message: "Team Not Found !", });
+
+            return res.status(HttpStatus.OK).json({ statusCode: HttpStatus.OK, status: true, message: 'Team Updated Succesfully !' });
+
+        } catch (error) {
+            console.log("🚀 ~ ScheduleController ~ Update_client ~ error:", error)
+            return res.status(HttpStatus.OK).send({ statusCode: HttpStatus.INTERNAL_SERVER_ERROR, status: false, message: "Something Went Wrong !", });
+        }
+
+    }
+
+    @Get("delete_team/:id")
+    async delete_team(@Res() res: Response, @Param('id') id: string) {
+        try {
+            const finddata = await this.scheduleservice.delete_team(id);
+            if (finddata == null) return res.status(HttpStatus.OK).send({ statusCode: HttpStatus.NOT_FOUND, status: false, message: "Team Not Found !", });
+            return res.status(HttpStatus.OK).json({ statusCode: HttpStatus.OK, status: true, message: 'Team Deleted Succesfully !' });
+
+        } catch (error) {
+            console.log("🚀 ~ ScheduleController ~ delete_team ~ error:", error)
+            return res.status(HttpStatus.OK).send({ statusCode: HttpStatus.INTERNAL_SERVER_ERROR, status: false, message: "Something Went Wrong !", });
         }
     }
 

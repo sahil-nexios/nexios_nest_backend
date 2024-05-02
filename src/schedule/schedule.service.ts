@@ -2,11 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { ScheduleEntity } from '../schedule/schedule.entity/schedule.entity';
 import { applynow } from '../schedule/schedule.entity/applynow.entity';
 import { contact } from '../schedule/schedule.entity/contact.entity';
+import { client } from '../schedule/schedule.entity/client.entity';
+import { team } from '../schedule/schedule.entity/team.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { read } from 'fs';
 import { EmailService } from '../emailservice';
 import { Connection } from 'typeorm';
+import * as fs from 'fs';
 
 
 @Injectable()
@@ -22,7 +25,14 @@ export class ScheduleService {
         private readonly applyNowRepository: Repository<applynow>,
 
         @InjectRepository(contact)
-        private readonly contactRepository: Repository<applynow>,
+        private readonly contactRepository: Repository<contact>,
+
+        @InjectRepository(client)
+        private readonly clientRepository: Repository<client>,
+
+
+        @InjectRepository(team)
+        private readonly teamRepository: Repository<team>,
     ) { }
 
     async create(dto) {
@@ -86,6 +96,102 @@ export class ScheduleService {
         } catch (error) {
             console.log("🚀 ~ ScheduleService ~ createcontactus ~ error:", error)
             throw new Error("Failed to ContactUs. Please try again later.");
+        }
+    }
+
+    async Add_client(dto, file) {
+        try {
+            const image = `public/client/${file.filename}`
+            const client = this.clientRepository.create({ ...dto, image: image })
+            return await this.clientRepository.save(client)
+        } catch (error) {
+            console.log("🚀 ~ ScheduleService ~ Add_client ~ error:", error)
+            throw new Error("Failed to Add Data In Client . Please try again later.");
+        }
+    }
+
+    async Update_client(id, dto, file) {
+        try {
+            // const datas = await this.clientRepository.query('SELECT * FROM client WHERE id = ?', [id]);
+            const datas = await this.clientRepository.findOne({ where: { id: id } });
+            if (!datas) return null
+            let image;
+            if (file) {
+                fs.unlinkSync(datas.image);
+                image = `public/client/${file.filename}`;
+            }
+            const setdata = {
+                ...dto,
+                image: image
+            }
+            return this.clientRepository
+                .createQueryBuilder()
+                .update()
+                .set(setdata)
+                .where('id = :id', { id })
+                .execute()
+        } catch (error) {
+            console.log("🚀 ~ ScheduleService ~ Update_client ~ error:", error)
+            throw new Error("Failed to Update Data In Client . Please try again later.");
+        }
+    }
+
+    async delete_client(id) {
+        try {
+            const datas = await this.clientRepository.findOne({ where: { id: id } });
+            if (!datas) return null
+            fs.unlinkSync(datas.image);
+            return await this.clientRepository.delete(id);
+        } catch (error) {
+            throw new Error("Failed to Delete Data In Client . Please try again later.");
+        }
+    }
+
+    async Add_team(dto, file) {
+        try {
+            const image = `public/team/${file.filename}`
+            const team = this.teamRepository.create({ ...dto, image: image })
+            return await this.teamRepository.save(team)
+        } catch (error) {
+            console.log("🚀 ~ ScheduleService ~ Add_team ~ error:", error)
+            throw new Error("Failed to Add Data In Team . Please try again later.");
+        }
+    }
+
+    async Team_update(id, dto, file) {
+        try {
+            // const datas = await this.clientRepository.query('SELECT * FROM client WHERE id = ?', [id]);
+            const datas = await this.teamRepository.findOne({ where: { id: id } });
+            if (!datas) return null
+            let image;
+            if (file) {
+                fs.unlinkSync(datas.image);
+                image = `public/team/${file.filename}`;
+            }
+            const setdata = {
+                ...dto,
+                image: image
+            }
+            return this.teamRepository
+                .createQueryBuilder()
+                .update()
+                .set(setdata)
+                .where('id = :id', { id })
+                .execute()
+        } catch (error) {
+            console.log("🚀 ~ ScheduleService ~ Update_team ~ error:", error)
+            throw new Error("Failed to Update Data In team . Please try again later.");
+        }
+    }
+
+    async delete_team(id){
+        try {
+            const datas = await this.teamRepository.findOne({ where: { id: id } });
+            if (!datas) return null
+            fs.unlinkSync(datas.image);
+            return await this.teamRepository.delete(id);
+        } catch (error) {
+            throw new Error("Failed to Delete Data In Team . Please try again later.");
         }
     }
 
