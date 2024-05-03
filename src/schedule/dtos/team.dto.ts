@@ -10,6 +10,6 @@ export class TeamDto {
     image: string;
 
     @IsNotEmpty()
-    designation: number;
+    designation: string;
 
 }

@@ -4,6 +4,8 @@ import { applynow } from '../schedule/schedule.entity/applynow.entity';
 import { contact } from '../schedule/schedule.entity/contact.entity';
 import { client } from '../schedule/schedule.entity/client.entity';
 import { team } from '../schedule/schedule.entity/team.entity';
+import { portfolio } from '../schedule/schedule.entity/portfolio.entity';
+import { career } from '../schedule/schedule.entity/career.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { read } from 'fs';
@@ -30,9 +32,14 @@ export class ScheduleService {
         @InjectRepository(client)
         private readonly clientRepository: Repository<client>,
 
-
         @InjectRepository(team)
         private readonly teamRepository: Repository<team>,
+
+        @InjectRepository(portfolio)
+        private readonly portfolioRepository: Repository<portfolio>,
+
+        @InjectRepository(career)
+        private readonly careerRepository: Repository<career>,
     ) { }
 
     async create(dto) {
@@ -99,6 +106,8 @@ export class ScheduleService {
         }
     }
 
+    //==================================== admin 
+
     async Add_client(dto, file) {
         try {
             const image = `public/client/${file.filename}`
@@ -107,6 +116,15 @@ export class ScheduleService {
         } catch (error) {
             console.log("🚀 ~ ScheduleService ~ Add_client ~ error:", error)
             throw new Error("Failed to Add Data In Client . Please try again later.");
+        }
+    }
+
+    async our_client() {
+        try {
+            return await this.connection.query('SELECT * FROM client');
+        } catch (error) {
+            console.log("🚀 ~ ScheduleService ~ our_client ~ error:", error)
+            throw new Error("Failed to Fatch Data. Please try again later.");
         }
     }
 
@@ -158,6 +176,14 @@ export class ScheduleService {
         }
     }
 
+    async our_team() {
+        try {
+            return await this.connection.query('SELECT * FROM team');
+        } catch (error) {
+            console.log("🚀 ~ ScheduleService ~ our_team ~ error:", error)
+            throw new Error("Failed to Fatch Data. Please try again later.");
+        }
+    }
     async Team_update(id, dto, file) {
         try {
             // const datas = await this.clientRepository.query('SELECT * FROM client WHERE id = ?', [id]);
@@ -184,7 +210,7 @@ export class ScheduleService {
         }
     }
 
-    async delete_team(id){
+    async delete_team(id) {
         try {
             const datas = await this.teamRepository.findOne({ where: { id: id } });
             if (!datas) return null
@@ -195,40 +221,108 @@ export class ScheduleService {
         }
     }
 
-    async our_client() {
+    async Add_portfolio(dto, file) {
         try {
-            return await this.connection.query('SELECT * FROM client');
+            const image = `public/portfolio/${file.filename}`
+            const portfolio = this.portfolioRepository.create({ ...dto, image: image })
+            return await this.portfolioRepository.save(portfolio)
         } catch (error) {
-            console.log("🚀 ~ ScheduleService ~ our_client ~ error:", error)
-            throw new Error("Failed to Fatch Data. Please try again later.");
-        }
-    }
-
-    async our_team() {
-        try {
-            return await this.connection.query('SELECT * FROM team');
-        } catch (error) {
-            console.log("🚀 ~ ScheduleService ~ our_team ~ error:", error)
-            throw new Error("Failed to Fatch Data. Please try again later.");
+            console.log("🚀 ~ ScheduleService ~ Add_team ~ error:", error)
+            throw new Error("Failed to Add Data In Portfolio . Please try again later.");
         }
     }
 
     async portfolio() {
         try {
-            return await this.connection.query('SELECT * FROM portfolio_service');
+            return await this.connection.query('SELECT * FROM portfolio');
         } catch (error) {
             console.log("🚀 ~ ScheduleService ~ portfolio ~ error:", error)
             throw new Error("Failed to Fatch Data. Please try again later.");
         }
     }
 
+    async portfolio_update(id, dto, file) {
+        try {
+            // const datas = await this.clientRepository.query('SELECT * FROM client WHERE id = ?', [id]);
+            const datas = await this.portfolioRepository.findOne({ where: { id: id } });
+            if (!datas) return null
+            let image;
+            if (file) {
+                fs.unlinkSync(datas.image);
+                image = `public/portfolio/${file.filename}`;
+            }
+            const setdata = {
+                ...dto,
+                image: image
+            }
+            return this.portfolioRepository
+                .createQueryBuilder()
+                .update()
+                .set(setdata)
+                .where('id = :id', { id })
+                .execute()
+        } catch (error) {
+            console.log("🚀 ~ ScheduleService ~ Update_portfolio ~ error:", error)
+            throw new Error("Failed to Update Data In portfolio . Please try again later.");
+        }
+    }
+
+    async delete_portfolio(id) {
+        try {
+            const datas = await this.portfolioRepository.findOne({ where: { id: id } });
+            if (!datas) return null
+            fs.unlinkSync(datas.image);
+            return await this.portfolioRepository.delete(id);
+        } catch (error) {
+            throw new Error("Failed to Delete Data In portfolio . Please try again later.");
+        }
+    }
+
+    async Add_position(dto) {
+        try {
+            const position = this.careerRepository.create(dto)
+            return await this.careerRepository.save(position)
+        } catch (error) {
+            console.log("🚀 ~ ScheduleService ~ Add_position ~ error:", error)
+            throw new Error("Failed to Add Data In position . Please try again later.");
+        }
+    }
+
     async open_position() {
         try {
-            return await this.connection.query('SELECT * FROM open_position');
+            return await this.connection.query('SELECT * FROM career');
         } catch (error) {
             console.log("🚀 ~ ScheduleService ~ open_position ~ error:", error)
             throw new Error("Failed to Fatch Data. Please try again later.");
         }
     }
+
+    async update_position(id, dto) {
+        try {
+            const datas = await this.careerRepository.findOne({ where: { id: id } });
+            if (!datas) return null
+
+            return this.careerRepository
+                .createQueryBuilder()
+                .update()
+                .set(dto)
+                .where('id = :id', { id })
+                .execute()
+        } catch (error) {
+            console.log("🚀 ~ ScheduleService ~ update_position ~ error:", error)
+            throw new Error("Failed to update data in update_position. Please try again later.");
+        }
+    }
+
+    async delete_position(id) {
+        try {
+            const datas = await this.careerRepository.findOne({ where: { id: id } });
+            if (!datas) return null
+            return await this.careerRepository.delete(id);
+        } catch (error) {
+            throw new Error("Failed to Delete Data In Position . Please try again later.");
+        }
+    }
+    
 }
 

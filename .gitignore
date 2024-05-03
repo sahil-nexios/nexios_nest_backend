@@ -4,6 +4,9 @@
 /build
 /uploads
 /db/migrations
+/public/client
+/public/portfolio
+/public/team
 
 # Logs
 logs

@@ -30,7 +30,7 @@ export const clientimageupload = {
         destination: clientimageuploadPath,
         filename: (req, file, cb) => {
             let ext = file.mimetype.split("/")[1];
-            if(ext == "svg+xml") ext = "svg"
+            if (ext == "svg+xml") ext = "svg"
             const fileName = `${file.originalname.split('.')[0]}-${Date.now()}.${ext}`;
             cb(null, fileName);
         }
@@ -48,6 +48,25 @@ if (!fs.existsSync(teamimageuploadPath)) {
 export const teamimageupload = {
     storage: diskStorage({
         destination: teamimageuploadPath,
+        filename: (req, file, cb) => {
+            let ext = file.mimetype.split("/")[1];
+            if (ext == "svg+xml") ext = "svg"
+            const fileName = `${file.originalname.split('.')[0]}-${Date.now()}.${ext}`;
+            cb(null, fileName);
+        }
+    })
+}
+
+
+const portfolioimageuploadPath = './public/portfolio';
+
+if (!fs.existsSync(portfolioimageuploadPath)) {
+    fs.mkdirSync(portfolioimageuploadPath, { recursive: true });
+}
+
+export const portfolioimageupload = {
+    storage: diskStorage({
+        destination: portfolioimageuploadPath,
         filename: (req, file, cb) => {
             let ext = file.mimetype.split("/")[1];
             if (ext == "svg+xml") ext = "svg"
