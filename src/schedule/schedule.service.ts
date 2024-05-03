@@ -110,7 +110,7 @@ export class ScheduleService {
 
     async Add_client(dto, file) {
         try {
-            const image = `public/client/${file.filename}`
+            const image = `public/clients/${file.filename}`
             const client = this.clientRepository.create({ ...dto, image: image })
             return await this.clientRepository.save(client)
         } catch (error) {
@@ -136,7 +136,7 @@ export class ScheduleService {
             let image;
             if (file) {
                 fs.unlinkSync(datas.image);
-                image = `public/client/${file.filename}`;
+                image = `public/clients/${file.filename}`;
             }
             const setdata = {
                 ...dto,
@@ -323,6 +323,6 @@ export class ScheduleService {
             throw new Error("Failed to Delete Data In Position . Please try again later.");
         }
     }
-    
+
 }
 

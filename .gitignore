@@ -4,7 +4,7 @@
 /build
 /uploads
 /db/migrations
-/public/client
+/public/clients
 /public/portfolio
 /public/team
 

@@ -19,7 +19,7 @@ export const fileUploadOptions = {
 };
 
 
-const clientimageuploadPath = './public/client';
+const clientimageuploadPath = './public/clients';
 
 if (!fs.existsSync(clientimageuploadPath)) {
     fs.mkdirSync(clientimageuploadPath, { recursive: true });
