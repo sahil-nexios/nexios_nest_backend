@@ -9,7 +9,7 @@ if (!fs.existsSync(directoryPath)) {
 
 export const fileUploadOptions = {
     storage: diskStorage({
-        destination: './uploads/resume',
+        destination: directoryPath,
         filename: (req, file, cb) => {
             const ext = file.mimetype.split("/")[1];
             const fileName = `resume-${file.originalname.split('.')[0]}-${Date.now()}.${ext}`;

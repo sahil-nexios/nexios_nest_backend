@@ -6,6 +6,7 @@ import { ContactDto } from '../schedule/dtos/contact.dto';
 import { ClientDto } from '../schedule/dtos/client.dto';
 import { PortfolioDto } from '../schedule/dtos/portfolio.dto';
 import { TeamDto } from '../schedule/dtos/team.dto';
+import { CareerDto } from '../schedule/dtos/career.dto';
 import { Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { fileUploadOptions } from '../multerService';
@@ -57,7 +58,6 @@ export class ScheduleController {
             return res.status(HttpStatus.OK).send({ statusCode: HttpStatus.INTERNAL_SERVER_ERROR, status: false, message: "Something Went Wrong !", });
         }
     }
-
 
     @Post('Add_client')
     @UseInterceptors(FileInterceptor('image', clientimageupload))
@@ -169,7 +169,6 @@ export class ScheduleController {
         }
     }
 
-
     @Post('Add_portfolio')
     @UseInterceptors(FileInterceptor('image', portfolioimageupload))
     async Add_portfolio(@Res() res: Response, @Body() dto: PortfolioDto, @UploadedFile() file) {
@@ -192,7 +191,7 @@ export class ScheduleController {
             return res.status(HttpStatus.OK).json({ statusCode: HttpStatus.OK, status: true, message: 'Our Portfolio!', data: portfolioData });
         } catch (error) {
             console.log("🚀 ~ ScheduleController ~ portfolio ~ error:", error);
-            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({ statusCode: HttpStatus.INTERNAL_SERVER_ERROR, status: false, message: "Something Went Wrong !" });
+            return res.status(HttpStatus.OK).send({ statusCode: HttpStatus.INTERNAL_SERVER_ERROR, status: false, message: "Something Went Wrong !" });
         }
     }
 
@@ -225,9 +224,8 @@ export class ScheduleController {
         }
     }
 
-
     @Post('Add_position')
-    async Add_position(@Body() dto, @Res() res: Response) {
+    async Add_position(@Body() dto: CareerDto, @Res() res: Response) {
         try {
             await this.scheduleservice.Add_position(dto);
             return res.status(HttpStatus.OK).json({ statusCode: HttpStatus.OK, status: true, message: 'Position Added Succesfully !' });
@@ -247,7 +245,7 @@ export class ScheduleController {
             return res.status(HttpStatus.OK).json({ statusCode: HttpStatus.OK, status: true, message: 'Our Positions!', data: positionData });
         } catch (error) {
             console.log("🚀 ~ ScheduleController ~ open_position ~ error:", error);
-            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({ statusCode: HttpStatus.INTERNAL_SERVER_ERROR, status: false, message: "Something Went Wrong !" });
+            return res.status(HttpStatus.OK).send({ statusCode: HttpStatus.INTERNAL_SERVER_ERROR, status: false, message: "Something Went Wrong !" });
         }
     }
 
