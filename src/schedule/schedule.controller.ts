@@ -109,7 +109,7 @@ export class ScheduleController {
             return res.status(HttpStatus.OK).json({ statusCode: HttpStatus.OK, status: true, message: 'Client Deleted Succesfully !' });
 
         } catch (error) {
-            console.log("🚀 ~ ScheduleController ~ async ~ error:", error)
+            console.log("🚀 ~ ScheduleController ~ delete_client ~ error:", error)
             return res.status(HttpStatus.OK).send({ statusCode: HttpStatus.INTERNAL_SERVER_ERROR, status: false, message: "Something Went Wrong !", });
         }
     }
@@ -150,7 +150,7 @@ export class ScheduleController {
             return res.status(HttpStatus.OK).json({ statusCode: HttpStatus.OK, status: true, message: 'Team Updated Succesfully !' });
 
         } catch (error) {
-            console.log("🚀 ~ ScheduleController ~ Update_client ~ error:", error)
+            console.log("🚀 ~ ScheduleController ~ Team_update ~ error:", error)
             return res.status(HttpStatus.OK).send({ statusCode: HttpStatus.INTERNAL_SERVER_ERROR, status: false, message: "Something Went Wrong !", });
         }
 
@@ -178,7 +178,7 @@ export class ScheduleController {
             return res.status(HttpStatus.OK).json({ statusCode: HttpStatus.OK, status: true, message: 'Portfolio Added Succesfully !' });
 
         } catch (error) {
-            console.log("🚀 ~ ScheduleController ~ Add_team ~ error:", error)
+            console.log("🚀 ~ ScheduleController ~ Add_portfolio ~ error:", error)
             return res.status(HttpStatus.OK).send({ statusCode: HttpStatus.INTERNAL_SERVER_ERROR, status: false, message: "Something Went Wrong !", });
         }
     }
@@ -231,7 +231,7 @@ export class ScheduleController {
             return res.status(HttpStatus.OK).json({ statusCode: HttpStatus.OK, status: true, message: 'Position Added Succesfully !' });
 
         } catch (error) {
-            console.log("🚀 ~ ScheduleController ~ Add_team ~ error:", error)
+            console.log("🚀 ~ ScheduleController ~ Add_position ~ error:", error)
             return res.status(HttpStatus.OK).send({ statusCode: HttpStatus.INTERNAL_SERVER_ERROR, status: false, message: "Something Went Wrong !", });
         }
     }
@@ -256,7 +256,7 @@ export class ScheduleController {
             if (finddata == null) return res.status(HttpStatus.OK).send({ statusCode: HttpStatus.NOT_FOUND, status: false, message: "Position Not Found !", });
             return res.status(HttpStatus.OK).json({ statusCode: HttpStatus.OK, status: true, message: 'Position Updated Succesfully !' });
         } catch (error) {
-            console.log("🚀 ~ ScheduleController ~ portfolio_update ~ error:", error)
+            console.log("🚀 ~ ScheduleController ~ update_position ~ error:", error)
             return res.status(HttpStatus.OK).send({ statusCode: HttpStatus.INTERNAL_SERVER_ERROR, status: false, message: "Something Went Wrong !", });
         }
     }
